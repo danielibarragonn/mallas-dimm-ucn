@@ -80,3 +80,7 @@ prerrequisitos. La preferencia queda guardada en el navegador.
 
 Se guarda en el navegador (localStorage), **por separado para cada carrera**.
 Herramienta de apoyo no oficial: la información válida es la de Jefatura de Carrera y los sistemas UCN.
+
+
+La versión para ferias vocacionales (pantalla táctil, con el Arcade DIMM) está en el repositorio
+[`feria-dimm-ucn`](https://github.com/danielibarragonn/feria-dimm-ucn) y lee los datos de `mallas.js` de este sitio.
