@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mallas interactivas · DIMM UCN</title>
+<meta name="description" content="Mallas curriculares interactivas del Departamento de Ingeniería Metalúrgica y Minas, UCN.">
+<link rel="icon" href="logo_ucn.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#16424d; --brand-2:#0e2f37;
+  --bg:#f3f5f7; --surface:#ffffff; --surface-2:#eef2f5; --text:#0f1d24; --muted:#5a6b75; --line:#dbe2e8;
+  --ok:#16a34a; --bad:#dc2626; --info:#2563eb; --warn:#d97706;
+  --accent:#e8891c;
+  --shadow:0 1px 2px rgba(15,29,36,.06),0 4px 14px rgba(15,29,36,.06);
+  --radius:14px;
+  --col:164px;
+  font-family:Manrope,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --bg:#0a1317; --surface:#122027; --surface-2:#182a32; --text:#e4edf1; --muted:#8ea2ac; --line:#243840;
+  --ok:#22c55e; --bad:#f87171; --info:#60a5fa; --warn:#fbbf24;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.25);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text)}
+body{min-height:100vh;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer}
+.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ---------- Botones genéricos ---------- */
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 12px;font-size:13px;font-weight:600;transition:background .15s,border-color .15s}
+.btn:hover{border-color:color-mix(in srgb,var(--accent) 60%,var(--line))}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.ghost{background:transparent;border-color:transparent}
+.btn.ghost:hover{background:var(--surface-2)}
+.icon-btn{width:36px;height:36px;justify-content:center;padding:0}
+
+/* ---------- Inicio ---------- */
+.home-hero{background:radial-gradient(1200px 400px at 85% -10%,rgba(243,154,43,.35),transparent 60%),radial-gradient(900px 380px at 0% 120%,rgba(46,155,214,.35),transparent 60%),linear-gradient(160deg,var(--brand),var(--brand-2));color:#fff;padding:28px 24px 96px}
+.home-hero .inner,.home-main{max-width:1180px;margin:0 auto}
+.home-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:13px;letter-spacing:.04em;text-transform:uppercase;opacity:.95}
+.brand img{width:44px;height:44px}
+.home-hero h1{font-size:clamp(30px,5vw,52px);line-height:1.05;margin:48px 0 12px;letter-spacing:-.02em;font-weight:800;max-width:780px}
+.home-hero p{margin:0;max-width:640px;font-size:17px;line-height:1.5;opacity:.85}
+.home-hero .btn{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#fff}
+.home-main{padding:0 24px 48px;margin-top:-64px}
+.career-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.career{position:relative;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:var(--shadow);text-align:left;transition:transform .18s,box-shadow .18s,border-color .18s;overflow:hidden}
+.career::before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:var(--c)}
+.career:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--c) 55%,var(--line));box-shadow:0 10px 30px rgba(15,29,36,.12)}
+.career .tag{align-self:flex-start;font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--c);background:color-mix(in srgb,var(--c) 14%,transparent);padding:4px 8px;border-radius:6px}
+.career h2{font-size:22px;line-height:1.2;margin:12px 0 6px;letter-spacing:-.01em}
+.career .desc{color:var(--muted);font-size:14px;line-height:1.45;margin:0 0 16px;min-height:40px}
+.minimap{display:grid;gap:3px;height:92px;align-items:end;margin-bottom:16px;padding:10px;background:var(--surface-2);border-radius:12px}
+.minimap .mcol{display:flex;flex-direction:column;gap:3px;justify-content:flex-start;height:100%}
+.minimap .mcell{flex:1;max-height:9px;border-radius:2px;opacity:.38}
+.minimap .mcell.done{opacity:1}
+.stats{display:flex;gap:18px;font-size:13px;color:var(--muted);margin-bottom:16px}
+.stats b{display:block;font-size:20px;color:var(--text);font-weight:800}
+.career .go{margin-top:auto;display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:14px}
+.career .go .arrow{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--c);color:#fff;transition:transform .18s}
+.career:hover .go .arrow{transform:translateX(3px)}
+.career .prog{font-size:12px;color:var(--muted);font-weight:600}
+.home-note{margin-top:28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.home-note div{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-size:13px;color:var(--muted);line-height:1.45}
+.home-note b{color:var(--text);display:block;margin-bottom:2px;font-size:14px}
+.disclaimer{color:var(--muted);font-size:12px;line-height:1.5;margin-top:28px;text-align:center}
+
+/* ---------- Vista malla ---------- */
+.topbar{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar .row{display:flex;align-items:center;gap:12px;padding:10px 20px;flex-wrap:wrap}
+.topbar img{width:34px;height:34px}
+.topbar .title{display:flex;flex-direction:column;min-width:0;margin-right:auto}
+.topbar .title small{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.topbar .title strong{font-size:17px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.switcher{display:flex;background:var(--surface-2);border-radius:11px;padding:3px;gap:2px}
+.switcher button{border:0;background:transparent;padding:7px 11px;border-radius:8px;font-size:12px;font-weight:800;letter-spacing:.04em;color:var(--muted)}
+.switcher button[aria-current="true"]{background:var(--surface);color:var(--text);box-shadow:var(--shadow)}
+.switcher button[aria-current="true"]::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--c);margin-right:6px;vertical-align:1px}
+
+.toolbar{display:flex;align-items:center;gap:8px;padding:0 20px 10px;flex-wrap:wrap}
+.search{position:relative;flex:1 1 220px;max-width:340px}
+.search input{width:100%;border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:10px;padding:9px 12px 9px 34px;font:inherit;font-size:14px}
+.search input:focus{outline:2px solid color-mix(in srgb,var(--accent) 50%,transparent);border-color:var(--accent)}
+.search svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 12px;font-size:13px;font-weight:600;user-select:none}
+.chip[aria-pressed="true"]{background:color-mix(in srgb,var(--accent) 14%,var(--surface));border-color:var(--accent);color:var(--text)}
+.chip .dot{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.chip[aria-pressed="true"] .dot{background:var(--accent)}
+.toolbar .spacer{flex:1}
+
+.summary{display:grid;grid-template-columns:auto minmax(220px,1fr) minmax(260px,1.4fr);gap:14px;padding:16px 20px 6px;max-width:1600px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow)}
+.ring-panel{display:flex;align-items:center;gap:16px}
+.ring{width:84px;height:84px;position:relative;flex:none}
+.ring svg{transform:rotate(-90deg)}
+.ring .pct{position:absolute;inset:0;display:grid;place-items:center;font-weight:800;font-size:19px}
+.ring-panel .big{font-size:15px;font-weight:700}
+.ring-panel .sub{font-size:13px;color:var(--muted);margin-top:3px}
+.facts{display:flex;flex-direction:column;gap:8px;font-size:13px}
+.fact{display:flex;align-items:center;gap:8px}
+.fact .k{color:var(--muted)}
+.fact b{font-weight:700}
+.facts .note{font-size:11.5px;color:var(--muted);line-height:1.4;border-top:1px dashed var(--line);padding-top:7px;margin-top:2px}
+.status.outside{background:color-mix(in srgb,var(--warn) 12%,transparent);color:var(--warn)}
+.status .crit{margin-top:10px;font-size:12px;font-weight:600;color:var(--muted)}
+.pill{font-size:11px;font-weight:800;padding:3px 8px;border-radius:999px}
+.pill.ok{background:color-mix(in srgb,var(--ok) 16%,transparent);color:var(--ok)}
+.pill.bad{background:color-mix(in srgb,var(--bad) 14%,transparent);color:var(--bad)}
+.cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px 16px}
+.cat .lbl{display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-bottom:5px}
+.cat .lbl span:last-child{color:var(--muted);font-weight:600}
+.bar{height:7px;border-radius:99px;background:var(--surface-2);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px;transition:width .35s}
+.legend{display:flex;gap:16px;flex-wrap:wrap;padding:8px 20px 0;font-size:12px;color:var(--muted);font-weight:600}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.lg{width:18px;height:12px;border-radius:4px;border:2px solid var(--line);background:var(--surface)}
+.lg.av{border-color:var(--ok)}
+.lg.ap{background:var(--surface-2);border-color:var(--muted);opacity:.7}
+.lg.lo{border-style:dashed;opacity:.6}
+.lg.pm{border-color:var(--bad)}
+.lg.dp{border-color:var(--info)}
+.hint{margin-left:auto}
+
+/* ---------- Tablero ---------- */
+.scroller{overflow:auto;padding:14px 20px 40px;scroll-padding:20px}
+.board{position:relative;display:grid;grid-template-columns:repeat(var(--n),minmax(var(--col),1fr));column-gap:14px;row-gap:8px;width:max(100%,calc(var(--n) * var(--col) + (var(--n) - 1) * 14px));margin:0 auto}
+.board > .wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:0}
+.yearbtn,.sembtn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:6px 10px;font-size:12px;font-weight:800;letter-spacing:.03em;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:8px;position:relative;z-index:1}
+.yearbtn{background:transparent;border-style:dashed;color:var(--muted);justify-content:center}
+.yearbtn:hover,.sembtn:hover{border-color:var(--accent);color:var(--text)}
+.yearbtn.done{background:var(--accent);border-color:var(--accent);border-style:solid;color:#fff}
+.sembtn{flex-direction:column;align-items:stretch;gap:5px}
+.sembtn .t{display:flex;justify-content:space-between}
+.sembtn .t span:last-child{color:var(--muted);font-weight:600}
+.sembtn .bar{height:4px}
+.sembtn .bar i{background:var(--accent)}
+.sembtn.done{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,var(--surface))}
+.col{display:flex;flex-direction:column;gap:10px;padding-top:4px}
+
+.card{position:relative;z-index:1;background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--cat);border-radius:12px;padding:10px 10px 9px 11px;box-shadow:var(--shadow);cursor:pointer;transition:transform .14s,box-shadow .14s,opacity .2s,border-color .14s,background .2s;outline:none;min-height:96px;display:flex;flex-direction:column}
+.card{scroll-margin:130px 40px 100px}
+.card:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(15,29,36,.14)}
+.card:focus-visible{box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 55%,transparent)}
+.card .top{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.card .sig{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.02em}
+.card .st{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:11px;flex:none}
+.card .nm{font-size:13.5px;font-weight:700;line-height:1.25;margin:5px 0 8px;flex:1}
+.card .ft{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);font-weight:600;white-space:nowrap;min-width:0}
+.card .ft .cat{color:var(--cat);filter:saturate(1.1);overflow:hidden;text-overflow:ellipsis;min-width:0}
+.card .info{margin-left:auto;width:24px;height:24px;border-radius:7px;border:1px solid var(--line);background:var(--surface-2);display:grid;place-items:center;padding:0;color:var(--muted);font-size:12px;font-weight:800}
+.card .info:hover{color:var(--text);border-color:var(--accent)}
+
+.card.available{box-shadow:0 0 0 2px var(--ok),var(--shadow)}
+.card.available .st{background:color-mix(in srgb,var(--ok) 16%,transparent);color:var(--ok)}
+.card.approved{background:var(--surface-2);box-shadow:none}
+.card.approved .nm{text-decoration:line-through;text-decoration-thickness:1.5px;color:var(--muted)}
+.card.approved .st{background:var(--ok);color:#fff}
+.card.locked .st{color:var(--muted)}
+.board.dim-locked .card.locked{opacity:.42;border-style:dashed;border-left-style:solid}
+.card.faded{opacity:.13 !important}
+.card.match{box-shadow:0 0 0 2px var(--warn),var(--shadow)}
+
+/* Hover / selección: prerrequisitos y dependientes */
+.board.focus .card:not(.rel){opacity:.28}
+.card.src{transform:scale(1.03);box-shadow:0 0 0 3px var(--accent),0 10px 26px rgba(0,0,0,.18);opacity:1 !important;z-index:3}
+.card.pre-ok{box-shadow:0 0 0 3px var(--ok),var(--shadow);opacity:1 !important}
+.card.pre-miss{box-shadow:0 0 0 3px var(--bad),var(--shadow);opacity:1 !important}
+.card.dep{box-shadow:0 0 0 3px var(--info),var(--shadow);opacity:1 !important}
+
+/* Simulación */
+.card.sim-src,.card.sim-new{opacity:1 !important}
+.card.sim-src{box-shadow:0 0 0 3px var(--warn),var(--shadow);background:color-mix(in srgb,var(--warn) 10%,var(--surface))}
+.card.sim-new{box-shadow:0 0 0 3px var(--info),var(--shadow);animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--info) 35%,transparent),var(--shadow)}}
+
+.wires path{fill:none;stroke-width:1.6;opacity:0;transition:opacity .2s}
+.board.show-lines .wires path{opacity:.28}
+.board .wires path.hl{opacity:1;stroke-width:2.6}
+.board .wires path.hl.ok{stroke:var(--ok) !important}
+.board .wires path.hl.miss{stroke:var(--bad) !important}
+.board .wires path.hl.dep{stroke:var(--info) !important}
+
+/* ---------- Panel de detalle ---------- */
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(400px,100%);background:var(--surface);border-left:1px solid var(--line);box-shadow:-12px 0 40px rgba(0,0,0,.15);z-index:40;transform:translateX(105%);transition:transform .25s ease;display:flex;flex-direction:column}
+.drawer.open{transform:none}
+@media (min-width:641px){body.drawer-open .scroller{padding-right:calc(min(400px,100%) + 20px)}}
+.drawer header{padding:18px 18px 14px;border-bottom:1px solid var(--line);border-top:5px solid var(--cat,var(--accent))}
+.drawer header .sig{font-size:12px;color:var(--muted);font-weight:700}
+.drawer header h3{margin:4px 0 10px;font-size:20px;line-height:1.2;padding-right:36px}
+.drawer .close{position:absolute;top:14px;right:12px}
+.meta{display:flex;flex-wrap:wrap;gap:6px}
+.meta span{font-size:12px;font-weight:700;background:var(--surface-2);border-radius:7px;padding:4px 8px}
+.drawer .body{padding:16px 18px;overflow:auto;flex:1;display:flex;flex-direction:column;gap:18px}
+.drawer h4{margin:0 0 8px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.status{border-radius:12px;padding:12px 14px;font-size:14px;font-weight:700}
+.status.approved{background:color-mix(in srgb,var(--ok) 14%,transparent);color:var(--ok)}
+.status.available{background:color-mix(in srgb,var(--ok) 10%,transparent);color:var(--ok)}
+.status.locked{background:color-mix(in srgb,var(--bad) 10%,transparent);color:var(--bad)}
+.status ul{margin:8px 0 0;padding-left:18px;font-weight:500;font-size:13px;color:var(--text)}
+.links{display:flex;flex-wrap:wrap;gap:6px}
+.links button{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:5px 8px;font-size:12px;font-weight:600;display:inline-flex;gap:5px;align-items:center}
+.links button:hover{border-color:var(--accent)}
+.links .ok{color:var(--ok)} .links .miss{color:var(--bad)}
+.empty{font-size:13px;color:var(--muted)}
+.impact{font-size:13px;line-height:1.5;color:var(--muted)}
+.impact b{color:var(--text)}
+.drawer footer{padding:14px 18px;border-top:1px solid var(--line);display:flex;gap:8px}
+.drawer footer .btn{flex:1;justify-content:center}
+
+/* ---------- Simulación (barra inferior) ---------- */
+.simbar{position:fixed;left:50%;bottom:18px;transform:translate(-50%,150%);z-index:35;background:var(--text);color:var(--bg);border-radius:14px;padding:12px 14px 12px 18px;display:flex;align-items:center;gap:14px;max-width:min(860px,calc(100% - 24px));box-shadow:0 12px 40px rgba(0,0,0,.3);transition:transform .25s}
+.simbar.open{transform:translate(-50%,0)}
+.simbar p{margin:0;font-size:14px;line-height:1.4}
+.simbar .btn{background:transparent;border-color:color-mix(in srgb,var(--bg) 30%,transparent);color:var(--bg);flex:none}
+.simbar .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* ---------- Diálogos ---------- */
+dialog{border:1px solid var(--line);border-radius:18px;background:var(--surface);color:var(--text);padding:0;width:min(560px,calc(100% - 24px));box-shadow:0 24px 60px rgba(0,0,0,.3)}
+dialog::backdrop{background:rgba(5,15,20,.5);backdrop-filter:blur(2px)}
+dialog .dh{padding:18px 20px 0;font-size:18px;font-weight:800}
+dialog .db{padding:12px 20px;font-size:14px;color:var(--muted);line-height:1.5}
+dialog textarea{width:100%;height:280px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);color:var(--text);font:12px/1.5 "JetBrains Mono",ui-monospace,monospace;padding:10px;resize:vertical}
+dialog .df{display:flex;justify-content:flex-end;gap:8px;padding:0 20px 18px}
+.toast{position:fixed;top:16px;left:50%;transform:translate(-50%,-160%);background:var(--text);color:var(--bg);padding:9px 14px;border-radius:10px;font-size:13px;font-weight:600;z-index:60;transition:transform .25s}
+.toast.show{transform:translate(-50%,0)}
+
+.page-foot{color:var(--muted);font-size:12px;padding:0 20px 28px;text-align:center;line-height:1.5}
+
+@media (max-width:900px){
+  .summary{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(280px,82%);overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:10px}
+  .summary .panel{scroll-snap-align:start}
+  .summary{scroll-padding:0 12px}
+  .hint{display:none}
+  :root{--col:156px}
+}
+@media (max-width:640px){
+  .topbar .row{padding:8px 12px}
+  .toolbar,.legend,.summary{padding-left:12px;padding-right:12px}
+  .scroller{padding:12px 12px 90px}
+  .topbar img{display:none}
+  .topbar .title{flex:1 1 0}
+  .topbar .title strong{font-size:15px}
+  .switcher{order:3;width:100%}
+  .toolbar{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  .toolbar .search{flex:0 0 200px}
+  .toolbar > *{flex:none}
+  .legend{flex-wrap:nowrap;overflow-x:auto;white-space:nowrap;gap:12px}
+  .switcher button{flex:1}
+  .drawer{top:auto;bottom:0;height:82vh;width:100%;border-left:0;border-top:1px solid var(--line);border-radius:18px 18px 0 0;transform:translateY(105%)}
+  .home-hero{padding-bottom:84px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<aside class="drawer" id="drawer" aria-hidden="true" aria-labelledby="dr-title"></aside>
+<div class="simbar" id="simbar" role="status"></div>
+<div class="toast" id="toast" role="status"></div>
+<dialog id="dlg"></dialog>
+
+<script src="mallas.js"></script>
+<script>
+"use strict";
+/* ============================================================
+   Mallas interactivas DIMM-UCN
+   Datos en mallas.js · Lógica y vistas en este archivo
+   ============================================================ */
+const CATS = MALLAS.categorias;
+const SPECIAL = new Set(["PRACT","CAPS"]); // ramos con requisito "de nivel" (muchos prerrequisitos)
+const $ = (s, el=document) => el.querySelector(s);
+const $$ = (s, el=document) => [...el.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const catColor = c => (CATS[c]||{}).color || "#64748b";
+const catName = c => (CATS[c]||{}).nombre || c;
+
+/* ---------- Almacenamiento (por carrera) ---------- */
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v==null ? d : JSON.parse(v); }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+const progKey = id => `mallas-dimm:v3:avance:${id}`;
+const loadApproved = id => new Set(store.get(progKey(id), []));
+
+/* ---------- Modelo ---------- */
+const CARRERAS = MALLAS.carreras.map(c => {
+  const rows = Object.entries(c.semestres)
+    .sort((a,b) => parseInt(a[0].slice(1)) - parseInt(b[0].slice(1)))
+    .flatMap(([,list]) => list.map(([nombre,sigla,sem,sct,cat,pre]) =>
+      ({nombre, sigla, sem:Number(sem), sct:Number(sct)||0, cat, pre:pre||[]})));
+  const by = new Map(rows.map(r => [r.sigla, r]));
+  const deps = new Map(rows.map(r => [r.sigla, []]));
+  rows.forEach(r => r.pre.forEach(p => deps.has(p) && deps.get(p).push(r.sigla)));
+  const maxSem = Math.max(...rows.map(r => r.sem));
+  const totalSct = rows.reduce((a,r) => a + r.sct, 0);
+  return {...c, rows, by, deps, maxSem, totalSct};
+});
+const carreraById = id => CARRERAS.find(c => c.id === id);
+
+/** Calcula el estado de cada ramo según prerrequisitos, proyección y ciclo básico. */
+function evaluate(c, appr){
+  const core = c.rows.filter(r => r.sct > 0 && !SPECIAL.has(r.sigla));
+  const pending = core.filter(r => !appr.has(r.sigla));
+  const base = pending.length ? Math.min(...pending.map(r => r.sem)) : c.maxSem;
+  const basicDone = core.filter(r => r.sem <= c.cicloBasico).every(r => appr.has(r.sigla));
+  const gateBasic = c.exigeCicloBasico !== false;
+  const top = base + c.ventana;
+  const st = new Map();
+  for(const r of c.rows){
+    const missing = r.pre.filter(p => !appr.has(p));
+    if(appr.has(r.sigla)){ st.set(r.sigla, {status:"approved", reasons:[], missing}); continue; }
+    const reasons = [];   // requisitos de la malla (prerrequisitos)
+    const criteria = [];  // criterios de proyección de esta herramienta
+    if(missing.length) reasons.push(missing.length === 1 ? `Falta 1 prerrequisito: ${missing[0]}` : `Faltan ${missing.length} prerrequisitos`);
+    if(r.sigla !== "PRACT" && S.rules){
+      if(r.sem < base || r.sem > top) criteria.push(c.notaProyeccion
+        ? {src:"oficial", text:`Supera el control de dispersión: con tu nivel actual puedes inscribir hasta el semestre ${top}`}
+        : {src:"app", text:`Fuera de la proyección estimada (semestres ${base}–${top})`});
+      if(gateBasic && r.sem > c.cicloBasico && !basicDone) criteria.push(c.notaCicloBasico
+        ? {src:"oficial", text:`Requiere el ciclo básico completo (semestres 1–${c.cicloBasico}). Se debe solicitar levantamiento de prerrequisitos a Jefatura de Carrera.`}
+        : {src:"app", text:`Ciclo básico (semestres 1–${c.cicloBasico}) aún incompleto`});
+    }
+    // Los criterios oficiales cuentan como requisito; los de la app se muestran aparte.
+    criteria.filter(x => x.src === "oficial").forEach(x => reasons.push(x.text));
+    const appCriteria = criteria.filter(x => x.src === "app").map(x => x.text);
+    st.set(r.sigla, {status: (reasons.length || appCriteria.length) ? "locked" : "available", reasons, criteria: appCriteria, missing});
+  }
+  return {base, top, basicDone, st};
+}
+
+function progress(c, appr){
+  const done = c.rows.filter(r => appr.has(r.sigla));
+  const doneSct = done.reduce((a,r) => a + r.sct, 0);
+  return {done:done.length, total:c.rows.length, doneSct, totalSct:c.totalSct,
+          pct: c.totalSct ? doneSct / c.totalSct * 100 : 0};
+}
+
+/* ---------- Estado de la app ---------- */
+const S = {
+  c:null, appr:new Set(), ev:null,
+  q:"", rules: store.get("mallas-dimm:rules", true), lines: store.get("mallas-dimm:lines", false), onlyAvail:false, dimLocked: store.get("mallas-dimm:dim", true),
+  selected:null, sim:null, hover:null
+};
+
+/* ---------- Tema ---------- */
+function applyTheme(t){
+  document.documentElement.dataset.theme = t;
+  store.set("mallas-dimm:theme", t);
+  $$(".theme-btn").forEach(b => b.innerHTML = t === "dark" ? ICON.sun : ICON.moon);
+}
+const ICON = {
+  sun:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>',
+  moon:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>',
+  back:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>',
+  arrow:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+  search:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>',
+  x:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  check:'✓', lock:'<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M17 10V7a5 5 0 0 0-10 0v3H5v12h14V10h-2zm-8-3a3 3 0 0 1 6 0v3H9V7z"/></svg>',
+  open:'●'
+};
+
+/* ---------- Router ---------- */
+function route(){
+  const id = location.hash.replace("#","");
+  closeDrawer(); endSim(true);
+  const c = carreraById(id);
+  if(c) renderMalla(c); else renderHome();
+}
+window.addEventListener("hashchange", route);
+
+/* =========================================================
+   INICIO
+   ========================================================= */
+function renderHome(){
+  S.c = null;
+  document.title = "Mallas interactivas · DIMM UCN";
+  const cards = CARRERAS.map(c => {
+    const appr = loadApproved(c.id);
+    const p = progress(c, appr);
+    const cols = [];
+    for(let s=1; s<=c.maxSem; s++){
+      const cells = c.rows.filter(r => r.sem === s)
+        .map(r => `<div class="mcell${appr.has(r.sigla)?" done":""}" style="background:${catColor(r.cat)}"></div>`).join("");
+      cols.push(`<div class="mcol">${cells}</div>`);
+    }
+    return `<a class="career" href="#${c.id}" style="--c:${c.acento};text-decoration:none;color:inherit">
+      <span class="tag">${esc(c.corto)}</span>
+      <h2>${esc(c.nombre)}</h2>
+      <p class="desc">${esc(c.descripcion)}</p>
+      <div class="minimap" style="grid-template-columns:repeat(${c.maxSem},1fr)" aria-hidden="true">${cols.join("")}</div>
+      <div class="stats">
+        <div><b>${c.maxSem}</b>semestres</div>
+        <div><b>${c.rows.length}</b>ramos</div>
+        <div><b>${c.totalSct}</b>SCT</div>
+      </div>
+      <div class="go"><span>${p.done ? `<span class="prog">Tu avance: ${Math.round(p.pct)}% · ${p.doneSct} SCT</span>` : "Explorar malla"}</span><span class="arrow">${ICON.arrow}</span></div>
+    </a>`;
+  }).join("");
+
+  $("#app").innerHTML = `
+    <section class="home-hero"><div class="inner">
+      <div class="home-top">
+        <div class="brand"><img src="logo_ucn.png" alt="Logo DIMM UCN"><span>Departamento de Ingeniería<br>Metalúrgica y Minas · UCN</span></div>
+        <button class="btn icon-btn theme-btn" title="Cambiar tema" aria-label="Cambiar tema"></button>
+      </div>
+      <h1>Mallas curriculares interactivas</h1>
+      <p>Elige una carrera para recorrer sus ramos semestre a semestre, ver qué asignaturas abre cada una y llevar el registro de tu avance.</p>
+    </div></section>
+    <main class="home-main">
+      <div class="career-grid">${cards}</div>
+      <div class="home-note">
+        <div><b>Marca tu avance</b>Haz clic en un ramo para aprobarlo. También puedes marcar semestres o años completos.</div>
+        <div><b>Sigue los requisitos</b>Pasa el cursor sobre un ramo para ver sus prerrequisitos (verde/rojo) y lo que desbloquea (azul).</div>
+        <div><b>Simula</b>Shift + clic, o el botón “Simular” del detalle, muestra qué se habilitaría si apruebas ese ramo.</div>
+      </div>
+      <p class="disclaimer">Herramienta de apoyo no oficial. La información válida para inscripción, requisitos y avance curricular es la entregada por Jefatura de Carrera y los sistemas institucionales de la UCN.<br>Tu avance se guarda solo en este navegador, por separado para cada carrera.</p>
+    </main>`;
+  $(".theme-btn").onclick = () => applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
+  applyTheme(document.documentElement.dataset.theme);
+  window.scrollTo(0,0);
+}
+
+/* =========================================================
+   MALLA
+   ========================================================= */
+function renderMalla(c){
+  S.c = c; S.appr = loadApproved(c.id); S.selected = null; S.sim = null; S.q = ""; S.onlyAvail = false;
+  document.title = `${c.nombre} · Malla interactiva DIMM UCN`;
+  document.documentElement.style.setProperty("--accent", c.acento);
+
+  const switcher = CARRERAS.map(o =>
+    `<button style="--c:${o.acento}" aria-current="${o.id===c.id}" data-go="${o.id}" title="${esc(o.nombre)}">${esc(o.corto)}</button>`).join("");
+
+  $("#app").innerHTML = `
+    <div class="topbar">
+      <div class="row">
+        <a class="btn ghost icon-btn" href="#" title="Volver a las mallas" aria-label="Volver a las mallas">${ICON.back}</a>
+        <img src="logo_ucn.png" alt="">
+        <div class="title"><small>Malla interactiva · DIMM UCN</small><strong>${esc(c.nombre)}</strong></div>
+        <div class="switcher" role="tablist" aria-label="Cambiar de carrera">${switcher}</div>
+        <button class="btn icon-btn theme-btn" title="Cambiar tema" aria-label="Cambiar tema"></button>
+      </div>
+      <div class="toolbar">
+        <label class="search">${ICON.search}<span class="sr">Buscar</span><input id="q" type="search" placeholder="Buscar ramo o sigla…" autocomplete="off"></label>
+        <button class="chip" id="t-lines" aria-pressed="${S.lines}"><span class="dot"></span>Conexiones</button>
+        <button class="chip" id="t-avail" aria-pressed="false"><span class="dot"></span>Solo disponibles</button>
+        <button class="chip" id="t-rules" aria-pressed="${S.rules}" title="Control de dispersión y ciclo básico. Desactívalo para ver solo prerrequisitos (por ejemplo, si tienes un levantamiento de prerrequisitos).">
+          <span class="dot"></span>Reglas de inscripción</button>
+        <button class="chip" id="t-dim" aria-pressed="${S.dimLocked}"><span class="dot"></span>Atenuar bloqueados</button>
+        <span class="spacer"></span>
+        <button class="btn" id="b-export">Exportar avance</button>
+        <button class="btn" id="b-reset">Limpiar</button>
+      </div>
+    </div>
+    <section class="summary" id="summary"></section>
+    <div class="legend">
+      <span><i class="lg av"></i>Disponible</span>
+      <span><i class="lg ap"></i>Aprobado</span>
+      <span><i class="lg lo"></i>Bloqueado</span>
+      <span><i class="lg pm"></i>Prerrequisito pendiente</span>
+      <span><i class="lg dp"></i>Lo que desbloquea</span>
+      <span class="hint">Clic: aprobar · Shift+clic: simular · ⓘ: detalle</span>
+    </div>
+    <div class="scroller" id="scroller"><div class="board" id="board"></div></div>
+    <p class="page-foot">Herramienta de apoyo no oficial. Verifica siempre requisitos e inscripción con Jefatura de Carrera y los sistemas UCN.</p>`;
+
+  $$("[data-go]").forEach(b => b.onclick = () => { location.hash = b.dataset.go; });
+  $(".theme-btn").onclick = () => { applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark"); };
+  applyTheme(document.documentElement.dataset.theme);
+  $("#q").oninput = e => { S.q = e.target.value; applyFilters(); };
+  $("#t-lines").onclick = e => { S.lines = !S.lines; store.set("mallas-dimm:lines", S.lines); e.currentTarget.setAttribute("aria-pressed", S.lines); applyFilters(); };
+  $("#t-avail").onclick = e => { S.onlyAvail = !S.onlyAvail; e.currentTarget.setAttribute("aria-pressed", S.onlyAvail); applyFilters(); };
+  $("#t-rules").onclick = e => {
+    S.rules = !S.rules; store.set("mallas-dimm:rules", S.rules);
+    e.currentTarget.setAttribute("aria-pressed", S.rules); endSim(true); refresh();
+    toast(S.rules ? "Reglas de inscripción activadas" : "Mostrando solo prerrequisitos");
+  };
+  $("#t-dim").onclick = e => { S.dimLocked = !S.dimLocked; store.set("mallas-dimm:dim", S.dimLocked); e.currentTarget.setAttribute("aria-pressed", S.dimLocked); applyFilters(); };
+  $("#b-export").onclick = openExport;
+  $("#b-reset").onclick = confirmReset;
+
+  buildBoard();
+  refresh();
+  window.scrollTo(0,0);
+}
+
+function buildBoard(){
+  const c = S.c, board = $("#board");
+  board.style.setProperty("--n", c.maxSem);
+  let html = `<svg class="wires" id="wires"></svg>`;
+  const years = Math.ceil(c.maxSem / 2);
+  for(let y=1; y<=years; y++){
+    const span = Math.min(2, c.maxSem - (y-1)*2);
+    html += `<button class="yearbtn" data-year="${y}" style="grid-row:1;grid-column:${y*2-1} / span ${span}" title="Marcar/desmarcar el año ${y} completo">Año ${y}</button>`;
+  }
+  for(let s=1; s<=c.maxSem; s++){
+    const rows = c.rows.filter(r => r.sem === s);
+    const sct = rows.reduce((a,r) => a + r.sct, 0);
+    html += `<button class="sembtn" data-sem="${s}" style="grid-row:2;grid-column:${s}" title="Marcar/desmarcar el semestre ${s} completo">
+      <span class="t"><span>Semestre ${s}</span><span>${sct} SCT</span></span><span class="bar"><i style="width:0"></i></span></button>`;
+    html += `<div class="col" style="grid-row:3;grid-column:${s}">` + rows.map(r => `
+      <div class="card" role="button" tabindex="0" data-sigla="${esc(r.sigla)}" style="--cat:${catColor(r.cat)}" aria-label="${esc(r.nombre)}">
+        <div class="top"><span class="sig">${esc(r.sigla)}</span><span class="st"></span></div>
+        <div class="nm">${esc(r.nombre)}</div>
+        <div class="ft"><span>${r.sct} SCT</span>·<span class="cat">${esc(catName(r.cat))}</span>
+          <button class="info" title="Ver detalle" aria-label="Ver detalle de ${esc(r.nombre)}">i</button></div>
+      </div>`).join("") + `</div>`;
+  }
+  board.innerHTML = html;
+
+  board.addEventListener("click", e => {
+    const yb = e.target.closest(".yearbtn"); if(yb){ toggleGroup(c.rows.filter(r => Math.ceil(r.sem/2) == yb.dataset.year)); return; }
+    const sb = e.target.closest(".sembtn"); if(sb){ toggleGroup(c.rows.filter(r => r.sem == sb.dataset.sem)); return; }
+    const card = e.target.closest(".card"); if(!card) return;
+    const sig = card.dataset.sigla;
+    if(e.target.closest(".info")){ openDrawer(sig); return; }
+    if(e.shiftKey){ startSim(sig); return; }
+    toggleApproved(sig);
+  });
+  board.addEventListener("keydown", e => {
+    const card = e.target.closest(".card"); if(!card || e.target !== card) return;
+    if(e.key === "Enter" || e.key === " "){ e.preventDefault(); e.shiftKey ? startSim(card.dataset.sigla) : toggleApproved(card.dataset.sigla); }
+    if(e.key === "i"){ openDrawer(card.dataset.sigla); }
+  });
+  board.addEventListener("pointerover", e => {
+    if(e.pointerType === "touch") return;
+    const card = e.target.closest(".card");
+    const sig = card ? card.dataset.sigla : null;
+    if(sig !== S.hover){ S.hover = sig; applyFocus(); }
+  });
+  board.addEventListener("pointerleave", () => { S.hover = null; applyFocus(); });
+  board.addEventListener("focusin", e => { const card = e.target.closest(".card"); if(card){ S.hover = card.dataset.sigla; applyFocus(); } });
+  board.addEventListener("focusout", () => { S.hover = null; applyFocus(); });
+
+  drawWires();
+  if(window.ResizeObserver){ new ResizeObserver(() => drawWires()).observe(board); }
+}
+
+function save(){ store.set(progKey(S.c.id), [...S.appr]); }
+
+function toggleApproved(sig){
+  endSim(true);
+  S.appr.has(sig) ? S.appr.delete(sig) : S.appr.add(sig);
+  save(); refresh();
+}
+function toggleGroup(rows){
+  endSim(true);
+  const all = rows.every(r => S.appr.has(r.sigla));
+  rows.forEach(r => all ? S.appr.delete(r.sigla) : S.appr.add(r.sigla));
+  save(); refresh();
+  toast(all ? `Se desmarcaron ${rows.length} ramos` : `Se marcaron ${rows.length} ramos como aprobados`);
+}
+
+/** Actualiza estados visuales, resumen y panel abierto. */
+function refresh(){
+  const c = S.c;
+  S.ev = evaluate(c, S.appr);
+  for(const card of $$("#board .card")){
+    const sig = card.dataset.sigla, st = S.ev.st.get(sig).status;
+    card.classList.toggle("approved", st === "approved");
+    card.classList.toggle("available", st === "available");
+    card.classList.toggle("locked", st === "locked");
+    $(".st", card).innerHTML = st === "approved" ? ICON.check : st === "locked" ? ICON.lock : ICON.open;
+    card.setAttribute("aria-pressed", st === "approved");
+  }
+  for(const b of $$("#board .sembtn")){
+    const rows = c.rows.filter(r => r.sem == b.dataset.sem);
+    const tot = rows.reduce((a,r) => a + r.sct, 0) || rows.length;
+    const done = rows.filter(r => S.appr.has(r.sigla)).reduce((a,r) => a + (r.sct || 0), 0);
+    const all = rows.every(r => S.appr.has(r.sigla));
+    b.classList.toggle("done", all);
+    $(".bar i", b).style.width = (all ? 100 : done / tot * 100) + "%";
+  }
+  for(const b of $$("#board .yearbtn")){
+    const rows = c.rows.filter(r => Math.ceil(r.sem/2) == b.dataset.year);
+    b.classList.toggle("done", rows.every(r => S.appr.has(r.sigla)));
+  }
+  renderSummary();
+  applyFilters();
+  if(S.selected) openDrawer(S.selected, true);
+}
+
+function renderSummary(){
+  const c = S.c, p = progress(c, S.appr), ev = S.ev;
+  const avail = c.rows.filter(r => ev.st.get(r.sigla).status === "available");
+  const availSct = avail.reduce((a,r) => a + r.sct, 0);
+  const R = 36, C = 2*Math.PI*R;
+  const catsHtml = Object.keys(CATS).filter(k => c.rows.some(r => r.cat === k)).map(k => {
+    const rows = c.rows.filter(r => r.cat === k);
+    const tot = rows.reduce((a,r) => a + r.sct, 0), done = rows.filter(r => S.appr.has(r.sigla)).reduce((a,r) => a + r.sct, 0);
+    const pct = tot ? done/tot*100 : (rows.every(r => S.appr.has(r.sigla)) ? 100 : 0);
+    return `<div class="cat"><div class="lbl"><span>${esc(catName(k))}</span><span>${tot ? `${done}/${tot} SCT` : `${rows.filter(r=>S.appr.has(r.sigla)).length}/${rows.length}`}</span></div>
+      <div class="bar"><i style="width:${pct}%;background:${catColor(k)}"></i></div></div>`;
+  }).join("");
+  $("#summary").innerHTML = `
+    <div class="panel ring-panel">
+      <div class="ring">
+        <svg width="84" height="84" viewBox="0 0 84 84"><circle cx="42" cy="42" r="${R}" fill="none" stroke="var(--surface-2)" stroke-width="9"/>
+        <circle cx="42" cy="42" r="${R}" fill="none" stroke="var(--accent)" stroke-width="9" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-p.pct/100)}" style="transition:stroke-dashoffset .4s"/></svg>
+        <div class="pct">${Math.round(p.pct)}%</div>
+      </div>
+      <div><div class="big">${p.doneSct} / ${p.totalSct} SCT</div><div class="sub">${p.done} de ${p.total} ramos aprobados</div></div>
+    </div>
+    <div class="panel facts">
+      ${!S.rules ? `<div class="fact"><span class="pill bad">Reglas desactivadas</span><span class="k">Solo prerrequisitos</span></div>`
+        : `<div class="fact"><span class="k">${c.notaProyeccion ? "Puedes inscribir" : "Proyección estimada"}</span><b>Semestres ${ev.base}–${Math.min(ev.top, c.maxSem)}</b></div>`}
+      <div class="fact"><span class="k">Ciclo básico (1–${c.cicloBasico})</span>${ev.basicDone ? '<span class="pill ok">Completo</span>' : '<span class="pill bad">Pendiente</span>'}</div>
+      <div class="fact"><span class="k">Disponibles ahora</span><b>${avail.length} ramos · ${availSct} SCT</b></div>
+      <div class="note">${!S.rules ? "El control de dispersión y la exigencia del ciclo básico no se están aplicando. Actívalos con el botón “Reglas de inscripción”."
+        : (c.notaProyeccion ? esc(c.notaProyeccion) : "La proyección es un criterio de esta herramienta, no un requisito del Libro de Carrera.") + (c.notaCicloBasico ? "<br>" + esc(c.notaCicloBasico) : "")}</div>
+    </div>
+    <div class="panel cats">${catsHtml}</div>`;
+}
+
+/* ---------- Filtros, foco y conexiones ---------- */
+function norm(s){ return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase(); }
+function applyFilters(){
+  const board = $("#board"); if(!board) return;
+  board.classList.toggle("show-lines", S.lines);
+  board.classList.toggle("dim-locked", S.dimLocked);
+  const q = norm(S.q.trim());
+  for(const card of $$(".card", board)){
+    const r = S.c.by.get(card.dataset.sigla);
+    const hit = !q || norm(r.sigla).includes(q) || norm(r.nombre).includes(q);
+    const okAvail = !S.onlyAvail || S.ev.st.get(r.sigla).status === "available";
+    card.classList.toggle("faded", !(hit && okAvail));
+    card.classList.toggle("match", !!q && hit);
+  }
+}
+
+function applyFocus(){
+  const board = $("#board"); if(!board) return;
+  const sig = S.hover || S.selected;
+  $$(".card", board).forEach(c => c.classList.remove("src","pre-ok","pre-miss","dep","rel"));
+  $$(".wires path", board).forEach(p => p.classList.remove("hl","ok","miss","dep"));
+  board.classList.toggle("focus", !!sig);
+  if(!sig) return;
+  const r = S.c.by.get(sig);
+  const mark = (s, ...cls) => { const el = board.querySelector(`.card[data-sigla="${CSS.escape(s)}"]`); el && el.classList.add("rel", ...cls); };
+  mark(sig, "src");
+  const showPre = !SPECIAL.has(sig) || r.pre.length < 12;
+  if(showPre) r.pre.forEach(p => mark(p, S.appr.has(p) ? "pre-ok" : "pre-miss"));
+  const deps = S.c.deps.get(sig).filter(d => !SPECIAL.has(d));
+  deps.forEach(d => mark(d, "dep"));
+  $$(".wires path", board).forEach(p => {
+    if(p.dataset.to === sig && showPre) p.classList.add("hl", S.appr.has(p.dataset.from) ? "ok" : "miss");
+    else if(p.dataset.from === sig) p.classList.add("hl", "dep");
+  });
+}
+
+function drawWires(){
+  const board = $("#board"), svg = $("#wires"); if(!board || !svg) return;
+  const W = board.scrollWidth, H = board.scrollHeight;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.setAttribute("width", W); svg.setAttribute("height", H);
+  const pos = new Map();
+  $$(".card", board).forEach(el => pos.set(el.dataset.sigla, {x:el.offsetLeft, y:el.offsetTop, w:el.offsetWidth, h:el.offsetHeight}));
+  let out = "";
+  for(const r of S.c.rows){
+    if(SPECIAL.has(r.sigla)) continue;
+    const t = pos.get(r.sigla); if(!t) continue;
+    for(const p of r.pre){
+      const s = pos.get(p); if(!s) continue;
+      const x1 = s.x + s.w, y1 = s.y + s.h/2, x2 = t.x, y2 = t.y + t.h/2, m = (x1 + x2) / 2;
+      out += `<path data-from="${esc(p)}" data-to="${esc(r.sigla)}" stroke="${catColor(r.cat)}" d="M${x1} ${y1} C${m} ${y1},${m} ${y2},${x2} ${y2}"/>`;
+    }
+  }
+  svg.innerHTML = out;
+  applyFocus();
+}
+
+/* ---------- Panel de detalle ---------- */
+function openDrawer(sig, keep){
+  const c = S.c, r = c.by.get(sig), info = S.ev.st.get(sig), dr = $("#drawer");
+  S.selected = sig;
+  const onlyCriteria = info.status === "locked" && !info.reasons.length;
+  const label = info.status === "approved" ? "✓ Aprobado"
+    : info.status === "available" ? "Disponible para proyectar"
+    : onlyCriteria ? "Prerrequisitos cumplidos · aún no proyectable según la herramienta"
+    : "No disponible por ahora";
+  const stCls = onlyCriteria ? "outside" : info.status;
+  const statusBody = (info.reasons.length ? `<ul>${info.reasons.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : "")
+    + (info.criteria && info.criteria.length ? `<div class="crit">Criterios de proyección de esta herramienta (no son requisitos del Libro de Carrera):</div><ul>${info.criteria.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : "");
+  const bulk = r.pre.length >= 12;
+  let preHtml;
+  if(!r.pre.length) preHtml = `<p class="empty">Sin prerrequisitos.</p>`;
+  else if(bulk){
+    const ok = r.pre.length - info.missing.length;
+    preHtml = `<p class="impact">Requisito de nivel: necesitas <b>${r.pre.length} ramos</b> aprobados (llevas <b>${ok}</b>).</p>` +
+      (info.missing.length ? `<div class="links">${info.missing.slice(0,24).map(p => `<button data-open="${esc(p)}"><span class="miss">✕</span>${esc(p)}</button>`).join("")}${info.missing.length>24?`<span class="empty">+${info.missing.length-24} más</span>`:""}</div>` : "");
+  } else {
+    preHtml = `<div class="links">${r.pre.map(p => `<button data-open="${esc(p)}" title="${esc(c.by.get(p)?.nombre||p)}">${S.appr.has(p)?'<span class="ok">✓</span>':'<span class="miss">✕</span>'}${esc(p)}</button>`).join("")}</div>`;
+  }
+  const deps = c.deps.get(sig);
+  const depSct = deps.reduce((a,d) => a + (c.by.get(d)?.sct||0), 0);
+  const depsHtml = deps.length
+    ? `<div class="links">${deps.map(d => `<button data-open="${esc(d)}" title="${esc(c.by.get(d)?.nombre||d)}">${esc(d)}</button>`).join("")}</div>
+       <p class="impact" style="margin-top:8px">Abre directamente <b>${deps.length}</b> ramo${deps.length>1?"s":""} (${depSct} SCT). Esto indica cuántas asignaturas dependen de este ramo, no su importancia académica.</p>`
+    : `<p class="empty">No es prerrequisito de otros ramos.</p>`;
+
+  dr.style.setProperty("--cat", catColor(r.cat));
+  dr.innerHTML = `
+    <header>
+      <div class="sig mono">${esc(r.sigla)}</div>
+      <h3 id="dr-title">${esc(r.nombre)}</h3>
+      <div class="meta"><span>Semestre ${r.sem}</span><span>${r.sct} SCT</span><span style="color:${catColor(r.cat)}">${esc(catName(r.cat))}</span></div>
+      <button class="btn ghost icon-btn close" aria-label="Cerrar">${ICON.x}</button>
+    </header>
+    <div class="body">
+      <div class="status ${stCls}">${label}${statusBody}</div>
+      <section><h4>Prerrequisitos</h4>${preHtml}</section>
+      <section><h4>Desbloquea</h4>${depsHtml}</section>
+    </div>
+    <footer>
+      <button class="btn" id="dr-sim" ${info.status==="approved"?"disabled":""}>Simular aprobación</button>
+      <button class="btn primary" id="dr-toggle">${info.status==="approved" ? "Quitar aprobación" : "Marcar aprobado"}</button>
+    </footer>`;
+  dr.classList.add("open"); dr.setAttribute("aria-hidden","false"); document.body.classList.add("drawer-open");
+  $(".close", dr).onclick = closeDrawer;
+  $("#dr-toggle").onclick = () => toggleApproved(sig);
+  $("#dr-sim").onclick = () => startSim(sig);
+  $$("[data-open]", dr).forEach(b => b.onclick = () => { openDrawer(b.dataset.open); scrollToCard(b.dataset.open); });
+  applyFocus();
+  if(!keep) scrollToCard(sig);
+}
+function closeDrawer(){
+  const dr = $("#drawer"); dr.classList.remove("open"); dr.setAttribute("aria-hidden","true"); document.body.classList.remove("drawer-open");
+  S.selected = null; applyFocus();
+}
+function scrollToCard(sig){
+  const el = document.querySelector(`#board .card[data-sigla="${CSS.escape(sig)}"]`);
+  el && el.scrollIntoView({behavior:"smooth", block:"nearest", inline:"center"});
+}
+
+/* ---------- Simulación ---------- */
+function startSim(sig){
+  const c = S.c;
+  if(S.appr.has(sig)){ toast("Ese ramo ya está aprobado"); return; }
+  const tmp = new Set(S.appr); tmp.add(sig);
+  const ev2 = evaluate(c, tmp);
+  const nuevos = c.rows.filter(r => r.sigla !== sig && S.ev.st.get(r.sigla).status === "locked" && ev2.st.get(r.sigla).status === "available");
+  closeDrawer();
+  S.sim = sig;
+  $$("#board .card").forEach(el => el.classList.remove("sim-src","sim-new"));
+  const get = s => document.querySelector(`#board .card[data-sigla="${CSS.escape(s)}"]`);
+  get(sig)?.classList.add("sim-src");
+  nuevos.forEach(r => get(r.sigla)?.classList.add("sim-new"));
+  const r = c.by.get(sig);
+  const bar = $("#simbar");
+  bar.innerHTML = `<p>${nuevos.length
+      ? `Si apruebas <b>${esc(r.nombre)}</b> se ${nuevos.length>1?"habilitarían":"habilitaría"} <b>${nuevos.length}</b> ramo${nuevos.length>1?"s":""}: ${nuevos.map(x => esc(x.sigla)).join(", ")}.`
+      : `Si apruebas <b>${esc(r.nombre)}</b> no se habilitarían ramos nuevos por ahora.`}</p>
+    <button class="btn primary" id="sim-ok">Aprobar</button><button class="btn" id="sim-x">Salir</button>`;
+  bar.classList.add("open");
+  scrollToCard(nuevos.length ? nuevos[0].sigla : sig);
+  $("#sim-ok").onclick = () => { endSim(); toggleApproved(sig); };
+  $("#sim-x").onclick = () => endSim();
+}
+function endSim(silent){
+  S.sim = null;
+  $$("#board .card").forEach(el => el.classList.remove("sim-src","sim-new"));
+  $("#simbar").classList.remove("open");
+}
+
+/* ---------- Exportar / limpiar ---------- */
+function reportText(){
+  const c = S.c, p = progress(c, S.appr), ev = S.ev;
+  const ap = c.rows.filter(r => S.appr.has(r.sigla));
+  const av = c.rows.filter(r => ev.st.get(r.sigla).status === "available");
+  return `Malla interactiva · ${c.nombre} · DIMM UCN
+
+IMPORTANTE: reporte de una herramienta de apoyo no oficial. La información válida para
+inscripción, requisitos y avance curricular es la entregada por Jefatura de Carrera y los
+sistemas institucionales de la Universidad Católica del Norte.
+
+RESUMEN
+- Créditos aprobados: ${p.doneSct}/${p.totalSct} SCT (${p.pct.toFixed(1)}%)
+- Ramos aprobados: ${p.done}/${p.total}
+- Ciclo básico (semestres 1–${c.cicloBasico}): ${ev.basicDone ? "completo" : "pendiente"}${c.notaCicloBasico ? "\n  (" + c.notaCicloBasico + ")" : ""}
+- Semestre base estimado: ${ev.base}
+- Proyección: semestres ${ev.base}–${Math.min(ev.top, c.maxSem)}
+  ${c.notaProyeccion ? "(" + c.notaProyeccion + ")" : "(criterio de esta herramienta, no un requisito del Libro de Carrera)"}
+
+${S.rules ? "" : "NOTA: reporte generado con las reglas de inscripción desactivadas (solo prerrequisitos).\n\n"}RAMOS APROBADOS
+${ap.length ? ap.map(r => `- ${r.sigla.padEnd(8)} ${r.nombre} (${r.sct} SCT)`).join("\n") : "- (ninguno)"}
+
+RAMOS DISPONIBLES PARA PROYECTAR (según los criterios de la herramienta)
+${av.length ? av.map(r => `- ${r.sigla.padEnd(8)} ${r.nombre} · Sem. ${r.sem} (${r.sct} SCT)`).join("\n") : "- (ninguno)"}
+
+Generado el ${new Date().toLocaleString("es-CL")}
+`;
+}
+function openExport(){
+  const txt = reportText();
+  const d = $("#dlg");
+  d.innerHTML = `<div class="dh">Exportar avance</div>
+    <div class="db"><textarea readonly id="ex-txt">${esc(txt)}</textarea></div>
+    <div class="df"><button class="btn" id="ex-copy">Copiar</button><button class="btn" id="ex-dl">Descargar .txt</button><button class="btn primary" id="ex-close">Listo</button></div>`;
+  $("#ex-close").onclick = () => d.close();
+  $("#ex-copy").onclick = async () => {
+    try{ await navigator.clipboard.writeText(txt); toast("Copiado al portapapeles"); }
+    catch(e){ const t = $("#ex-txt"); t.select(); toast("Selecciona y copia con Ctrl/⌘ + C"); }
+  };
+  $("#ex-dl").onclick = () => {
+    try{
+      const url = URL.createObjectURL(new Blob([txt], {type:"text/plain;charset=utf-8"}));
+      const a = document.createElement("a"); a.href = url; a.download = `avance_${S.c.id}_dimm_ucn.txt`;
+      document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }catch(e){ toast("No se pudo descargar; usa Copiar"); }
+  };
+  d.showModal();
+}
+function confirmReset(){
+  const d = $("#dlg");
+  d.innerHTML = `<div class="dh">¿Limpiar avance?</div>
+    <div class="db">Se desmarcarán los ${S.appr.size} ramos aprobados de <b>${esc(S.c.nombre)}</b>. Las otras carreras no se ven afectadas.</div>
+    <div class="df"><button class="btn" id="rs-no">Cancelar</button><button class="btn primary" id="rs-yes">Limpiar</button></div>`;
+  $("#rs-no").onclick = () => d.close();
+  $("#rs-yes").onclick = () => { d.close(); S.appr.clear(); save(); endSim(); refresh(); toast("Avance borrado"); };
+  d.showModal();
+}
+
+let toastT;
+function toast(msg){
+  const t = $("#toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 2200);
+}
+
+document.addEventListener("keydown", e => {
+  if(e.key === "Escape"){ if(S.sim) endSim(); else if(S.selected) closeDrawer(); }
+  if(e.key === "/" && document.activeElement?.tagName !== "INPUT" && $("#q")){ e.preventDefault(); $("#q").focus(); }
+});
+
+/* ---------- Inicio ---------- */
+applyTheme(store.get("mallas-dimm:theme", matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
+route();
+</script>
+</body>
+</html>
